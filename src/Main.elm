@@ -37,12 +37,7 @@ update msg model =
                 , body =
                     BE.encode <|
                         BE.string <|
-                            List.foldr String.append
-                                ""
-                                [ "<html>This page has been viewed <b>"
-                                , String.fromInt model.count
-                                , "</b> times.</html>"
-                                ]
+                            ("<html>This page has been viewed <b>" ++ String.fromInt model.count ++ "</b> times.</html>")
                 }
             )
 
