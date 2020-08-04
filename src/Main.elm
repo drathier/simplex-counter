@@ -4,6 +4,7 @@ import Bytes exposing (Bytes)
 import Bytes.Decode as BD
 import Bytes.Encode as BE
 import Http.Server.LowLevel as HSL
+import Simplex
 
 
 type alias Model =
@@ -16,14 +17,7 @@ initialModel =
 
 
 type Msg
-    = GetRequest
-        { method : String -- GET, POST, ...
-        , host : String -- example.com, always without port number
-        , path : String -- /search?q=elm (remember #anchor is never sent to the server)
-        , headers : List ( String, String ) -- raw headers, not yet normalized
-        , body : Bytes
-        , requestId : HSL.HttpRequestId
-        }
+    = GetRequest HSL.HttpRequest
 
 
 update msg model =
@@ -42,9 +36,9 @@ update msg model =
             )
 
 
-main : Program () Model Msg
+main : Simplex.BackendProgram () Model Msg Never
 main =
-    Platform.worker
+    Simplex.new
         { init = \_ -> ( initialModel, Cmd.none )
         , update = update
         , subscriptions = \m -> HSL.subscribe GetRequest
